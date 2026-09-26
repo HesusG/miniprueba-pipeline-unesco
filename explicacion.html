@@ -103,15 +103,15 @@ footer{padding:30px 0 60px;color:var(--muted);font-size:14px}
 <section>
   <div class="num">1</div>
   <h2>Juntamos las políticas</h2>
-  <p>Reunimos 15 documentos oficiales de 7 países. Cada uno está en su idioma original: inglés, español, alemán o chino.</p>
-  <div class="card map"><svg id="map" viewBox="0 0 960 470" role="img" aria-label="Mapa con los siete países del estudio"></svg></div>
+  <p>Reunimos 16 documentos oficiales de 8 países. Cada uno está en su idioma original: inglés, español, alemán o chino.</p>
+  <div class="card map"><svg id="map" viewBox="0 0 960 470" role="img" aria-label="Mapa con los ocho países del estudio"></svg></div>
   <div class="docs" id="docs"></div>
 </section>
 
 <section>
   <div class="num">2</div>
   <h2>Los cortamos en pedazos</h2>
-  <p>Un documento entero es demasiado para compararlo de una vez. Por eso lo cortamos en pedazos de 500 caracteres, como fichas. En total salen 3,095 pedazos.</p>
+  <p>Un documento entero es demasiado para compararlo de una vez. Por eso lo cortamos en pedazos de 500 caracteres, como fichas. En total salen 3,211 pedazos.</p>
   <p>Este es uno de ellos. Viene de un plan de acción de China sobre inteligencia artificial en la educación.</p>
   <div class="card">
     <div class="tabs"><button class="act" data-t="zh">Original en chino</button><button data-t="en">Traducción al inglés</button></div>
@@ -194,6 +194,7 @@ const PAISES={
   china:{n:"China",iso:"156",idioma:"chino",doc:"9 documentos nacionales y locales (2025 y 2026)",frag:271},
   colombia:{n:"Colombia",iso:"170",idioma:"español",doc:"CONPES 4144 (2025)",frag:764},
   eeuu:{n:"Estados Unidos",iso:"840",idioma:"inglés",doc:"AI Action Plan (2025)",frag:156},
+  mexico:{n:"México",iso:"484",idioma:"español",doc:"Plan Nacional de Inteligencia Artificial (2026)",frag:116},
   sudafrica:{n:"Sudáfrica",iso:"710",idioma:"inglés",doc:"Comisión Presidencial 4IR (2020)",frag:1303},
 };
 const byIso=Object.fromEntries(Object.entries(PAISES).map(([k,v])=>[v.iso,k]));
@@ -272,6 +273,7 @@ function drawFindings(){
   const items=[
     `<b>China y Colombia son los que más hablan de educación.</b> En China, ${cnt("china","6.5")+cnt("china","6.4")} de ${tot("china")} pedazos tratan de enseñanza o de ética. En Colombia, ${cnt("colombia","6.5")+cnt("colombia","6.4")} de ${tot("colombia")}.`,
     `<b>Los planes generales de IA casi no hablan de escuelas.</b> En Estados Unidos, ${none("eeuu")} de ${tot("eeuu")} pedazos no hablan de ningún tema de UNESCO, según el panel. En Australia, ${none("australia")} de ${tot("australia")}. Es lo mismo que encontró Schiff en 2022.`,
+    `<b>México habla de IA, pero no de enseñanza.</b> De ${tot("mexico")} pedazos de su Plan Nacional de 2026, ${cnt("mexico","6.5")} tratan de enseñanza y docentes. Los demás hablan de visión, principios, gobernanza y ética, de ningún tema de UNESCO, o el panel no se puso de acuerdo.`,
     `<b>El idioma no cambia mucho el resultado.</b> Si traducimos todo al inglés, los países quedan casi en el mismo orden de cercanía (coincidencia de ${rho} sobre 1 en el tema de enseñanza).`,
     `<b>Los modelos coinciden bastante, pero no siempre.</b> En 2 de cada 3 pares de modelos eligen el mismo tema. Por eso usamos 7 y no uno solo.`,
   ];

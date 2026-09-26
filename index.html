@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Miniprueba del pipeline UNESCO</title>
-<meta name="description" content="Resultados preliminares, a pequeña escala, del pipeline exploratorio que compara políticas de educación en inteligencia artificial de siete países con las categorías de la guía de UNESCO.">
+<meta name="description" content="Resultados preliminares, a pequeña escala, del pipeline exploratorio que compara políticas de educación en inteligencia artificial de ocho países con las categorías de la guía de UNESCO.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -89,7 +89,7 @@ footer{padding:30px 0 60px;color:var(--muted);font-size:13px}
     <button class="theme" id="themeBtn" aria-label="Cambiar tema">◐</button>
     <div class="eyebrow">Tesis · Maestría en Pedagogía, UPAEP · Hesus García Cobos</div>
     <h1>Miniprueba del pipeline UNESCO</h1>
-    <p class="lede">Una corrida pequeña y real del procedimiento que propone la tesis: recuperar fragmentos de las políticas de siete países, dárselos a un panel de siete modelos de lenguaje para que los clasifiquen con las categorías de la guía de UNESCO, y medir qué tan cerca o lejos quedan los países dentro de cada categoría. Son resultados preliminares para ver cómo funciona la cadena, no conclusiones.</p>
+    <p class="lede">Una corrida pequeña y real del procedimiento que propone la tesis: recuperar fragmentos de las políticas de ocho países, dárselos a un panel de siete modelos de lenguaje para que los clasifiquen con las categorías de la guía de UNESCO, y medir qué tan cerca o lejos quedan los países dentro de cada categoría. Son resultados preliminares para ver cómo funciona la cadena, no conclusiones.</p>
     <p style="margin:10px 0 0"><a href="explicacion.html" style="color:var(--frame);font-weight:600">¿Primera vez? Lee la versión explicada fácil →</a></p>
     <div class="tiles" id="heroTiles"></div>
   </div>
@@ -180,7 +180,7 @@ footer{padding:30px 0 60px;color:var(--muted);font-size:13px}
 <script>
 const $ = s => document.querySelector(s);
 const NS = "http://www.w3.org/2000/svg";
-const CTY = {alemania:"Alemania",australia:"Australia",canada:"Canadá",china:"China",colombia:"Colombia",eeuu:"Estados Unidos",sudafrica:"Sudáfrica"};
+const CTY = {alemania:"Alemania",australia:"Australia",canada:"Canadá",china:"China",colombia:"Colombia",eeuu:"Estados Unidos",mexico:"México",sudafrica:"Sudáfrica"};
 const LANG = {de:"alemán",en:"inglés",zh:"chino",es:"español"};
 const tip = $("#tip");
 function showTip(e, html){tip.innerHTML=html;tip.style.opacity=1;const x=Math.min(e.clientX+14, innerWidth-340);tip.style.left=x+"px";tip.style.top=(e.clientY+14)+"px";}
@@ -220,7 +220,7 @@ function init(){
   ].map(([v,l])=>`<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
 
   const steps=[
-    ["Fragmentos","15 documentos en su idioma original, cortados en fragmentos de 500 caracteres.",`colección ${P.collection}`],
+    ["Fragmentos","16 documentos en su idioma original, cortados en fragmentos de 500 caracteres.",`colección ${P.collection}`],
     ["Recuperación",`Por país y categoría, los ${P.k_per_cell} fragmentos más cercanos a la descripción de la categoría.`,`${D.n_fragments} fragmentos únicos`],
     ["Panel",`7 modelos leen cada fragmento con el anterior y el siguiente, y eligen categoría.`,`${D.n_classifications} votos`],
     ["Bases por categoría",`Se acepta un fragmento si ${P.majority} de 7 coinciden.`,`${acc} aceptados`],
