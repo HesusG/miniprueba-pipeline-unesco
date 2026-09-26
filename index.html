@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miniprueba del pipeline UNESCO</title>
+<meta name="description" content="Resultados preliminares, a pequeña escala, del pipeline exploratorio que compara políticas de educación en inteligencia artificial de siete países con las categorías de la guía de UNESCO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#FAFCFE; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#8a8984;
+  --rule:#e3e6ec; --frame:#023BF2; --frame-soft:#e8eeff;
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300; --c7:#4a3aa7;
+  --none:#cfcdc6; --nocons:#9d9b95;
+  --seq-0:#f3f7fd; --seq-1:#cde2fb; --seq-2:#86b6ef; --seq-3:#3987e5; --seq-4:#1c5cab; --seq-5:#0d366b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#121212; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e86;
+    --rule:#2c2c2a; --frame:#6f8dff; --frame-soft:#1c2340;
+    --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9;
+    --none:#4a4945; --nocons:#6d6c66;
+    --seq-0:#1d2230; --seq-1:#184f95; --seq-2:#256abf; --seq-3:#3987e5; --seq-4:#86b6ef; --seq-5:#cde2fb;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#121212; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e86;
+  --rule:#2c2c2a; --frame:#6f8dff; --frame-soft:#1c2340;
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9;
+  --none:#4a4945; --nocons:#6d6c66;
+  --seq-0:#1d2230; --seq-1:#184f95; --seq-2:#256abf; --seq-3:#3987e5; --seq-4:#86b6ef; --seq-5:#cde2fb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:3px solid var(--frame);padding:28px 0 22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--frame)}
+h1{font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.05;margin:8px 0 10px}
+h2{font-family:Archivo,sans-serif;font-weight:700;font-size:26px;margin:0 0 6px}
+h3{font-family:Archivo,sans-serif;font-weight:700;font-size:18px;margin:18px 0 6px}
+.lede{max-width:760px;color:var(--ink-2);font-size:17px}
+section{padding:40px 0;border-bottom:1px solid var(--rule)}
+.step-tag{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--frame);text-transform:uppercase;letter-spacing:.08em}
+.q{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:12px;background:var(--frame-soft);color:var(--frame);padding:2px 8px;border-radius:4px;margin-left:6px;vertical-align:middle}
+p.note{color:var(--ink-2);max-width:780px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:20px}
+.tile{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px 16px}
+.tile .v{font-family:Archivo,sans-serif;font-weight:800;font-size:32px;line-height:1.1}
+.tile .l{font-size:13px;color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px;margin-top:16px;overflow-x:auto}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:18px;counter-reset:s}
+.flow .box{background:var(--surface);border:1.5px solid var(--frame);border-radius:10px;padding:12px;position:relative}
+.flow .box b{display:block;font-family:Archivo,sans-serif;font-size:15px}
+.flow .box span{font-size:13px;color:var(--ink-2)}
+.flow .box .n{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--frame);margin-top:6px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-2);margin:6px 0 4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+svg text{font-family:"IBM Plex Sans",sans-serif;fill:var(--ink-2);font-size:12px}
+svg .val{fill:var(--ink);font-size:11px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:8px 10px;border-radius:6px;max-width:320px;opacity:0;transition:opacity .1s;z-index:9;line-height:1.4}
+select,button{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--surface);color:var(--ink)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.frag{border-top:1px solid var(--rule);padding:14px 0}
+.frag .meta{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-2)}
+.frag .txt{margin:6px 0;font-size:14.5px;white-space:pre-wrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;border:1px solid var(--rule);border-radius:999px;padding:2px 8px;color:var(--ink-2)}
+.chip b{color:var(--ink)}
+table.t{border-collapse:collapse;font-size:13px;width:100%}
+table.t th,table.t td{border-bottom:1px solid var(--rule);padding:6px 8px;text-align:right}
+table.t th:first-child,table.t td:first-child{text-align:left}
+details summary{cursor:pointer;color:var(--frame);font-size:14px;margin-top:8px}
+.warn{border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--surface);color:var(--ink-2);font-size:14px;margin-top:14px}
+footer{padding:30px 0 60px;color:var(--muted);font-size:13px}
+.theme{position:absolute;top:14px;right:20px}
+</style>
+</head>
+<body>
+<div class="tip" id="tip"></div>
+<header class="top">
+  <div class="wrap" style="position:relative">
+    <button class="theme" id="themeBtn" aria-label="Cambiar tema">◐</button>
+    <div class="eyebrow">Tesis · Maestría en Pedagogía, UPAEP · Hesus García Cobos</div>
+    <h1>Miniprueba del pipeline UNESCO</h1>
+    <p class="lede">Una corrida pequeña y real del procedimiento que propone la tesis: recuperar fragmentos de las políticas de siete países, dárselos a un panel de siete modelos de lenguaje para que los clasifiquen con las categorías de la guía de UNESCO, y medir qué tan cerca o lejos quedan los países dentro de cada categoría. Son resultados preliminares para ver cómo funciona la cadena, no conclusiones.</p>
+    <div class="tiles" id="heroTiles"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="pipeline">
+  <div class="step-tag">El procedimiento</div>
+  <h2>Una sola cadena, seis pasos</h2>
+  <p class="note">Cada paso usa la salida del anterior. Los números de cada caja son los de esta corrida.</p>
+  <div class="flow" id="flow"></div>
+</section>
+
+<section id="recuperacion">
+  <div class="step-tag">Pasos 1 y 2 · Fragmentos y recuperación</div>
+  <h2>Qué entró a la prueba</h2>
+  <p class="note" id="retrNote"></p>
+  <div class="card"><table class="t" id="retrTable"></table></div>
+</section>
+
+<section id="panel">
+  <div class="step-tag">Paso 3 · Panel de modelos</div>
+  <h2>Cómo votó el panel <span class="q">base de P1–P3</span></h2>
+  <p class="note">Cada columna es un fragmento y cada fila un modelo. El color es la categoría que ese modelo asignó. Un fragmento se acepta en una categoría cuando al menos 4 de los 7 modelos coinciden. Pasa el cursor para leer el voto.</p>
+  <div class="legend" id="catLegend"></div>
+  <div class="card"><svg id="voteMatrix"></svg></div>
+  <h3>Acuerdo entre modelos</h3>
+  <p class="note">κ de Fleiss y α de Krippendorff (nominales) corrigen por azar; 1 es acuerdo perfecto y 0 el que se esperaría por azar. El acuerdo exacto es la proporción de pares de modelos que eligieron la misma categoría.</p>
+  <div class="tiles" id="agrTiles"></div>
+  <div class="card"><svg id="perModel"></svg></div>
+</section>
+
+<section id="cobertura">
+  <div class="step-tag">Resultado 1</div>
+  <h2>Cobertura: qué dijo el panel de lo recuperado <span class="q">P1</span></h2>
+  <p class="note">Para cada país, en qué categoría acabaron los fragmentos recuperados. Una barra con mucho gris significa que la recuperación trajo fragmentos que el panel no consideró de ninguna categoría, o en los que no se puso de acuerdo.</p>
+  <div class="legend" id="covLegend"></div>
+  <div class="card"><svg id="coverage"></svg></div>
+  <h3>Educación para la IA frente a IA para la educación</h3>
+  <p class="note">La distinción de Schiff (2022), según la mayoría del panel, sobre los mismos fragmentos.</p>
+  <div class="legend" id="schLegend"></div>
+  <div class="card"><svg id="schiff"></svg></div>
+</section>
+
+<section id="distancia">
+  <div class="step-tag">Pasos 4 y 5 · Resultado 2</div>
+  <h2>Distancia entre países dentro de cada categoría <span class="q">P2</span></h2>
+  <p class="note">Distancia del coseno entre los centroides de los fragmentos aceptados de cada país (0 = idénticos). El número de cada celda es la distancia; el color la refuerza, con más intensidad a mayor distancia. Un país sin fragmentos aceptados en una categoría no aparece en su matriz.</p>
+  <div class="controls"><label>Categoría <select id="catSel"></select></label></div>
+  <div class="grid3">
+    <div class="card"><h3 style="margin-top:0">Distancias (idioma original)</h3><svg id="heatOrig"></svg></div>
+    <div class="card"><h3 style="margin-top:0">Mapa de los fragmentos</h3><div class="controls"><label>Resaltar <select id="ctySel"></select></label></div><svg id="pca"></svg><p class="note" style="font-size:12.5px">Proyección en dos dimensiones (componentes principales) de los vectores de 384 dimensiones. Sirve para ver agrupamientos; las distancias reales están en la matriz.</p></div>
+  </div>
+</section>
+
+<section id="robustez">
+  <div class="step-tag">Paso 6 · Resultado 3</div>
+  <h2>¿La distancia es de contenido o de idioma? <span class="q">P3</span></h2>
+  <p class="note">Se recalculan las mismas distancias con todos los fragmentos traducidos al inglés. Si el acomodo de los países se mantiene (ρ de Spearman alto entre ambas matrices), la distancia no depende del idioma.</p>
+  <div class="tiles" id="rhoTiles"></div>
+  <div class="grid3">
+    <div class="card"><h3 style="margin-top:0">Original</h3><svg id="heatA"></svg></div>
+    <div class="card"><h3 style="margin-top:0">Traducido al inglés</h3><svg id="heatB"></svg></div>
+  </div>
+</section>
+
+<section id="fragmentos">
+  <div class="step-tag">Lectura de vuelta a los textos</div>
+  <h2>Los fragmentos y sus votos</h2>
+  <p class="note">Validar es volver a leer. Aquí están todos los fragmentos de la prueba, con el voto y la justificación de cada modelo.</p>
+  <div class="controls">
+    <label>País <select id="fCty"></select></label>
+    <label>Resultado <select id="fCat"></select></label>
+  </div>
+  <div id="fragList"></div>
+</section>
+
+<section id="limites">
+  <div class="step-tag">Antes de leer los resultados</div>
+  <h2>Qué no dice esta prueba</h2>
+  <div class="warn" id="limits"></div>
+</section>
+
+</main>
+<footer class="wrap" id="foot"></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const CTY = {alemania:"Alemania",australia:"Australia",canada:"Canadá",china:"China",colombia:"Colombia",eeuu:"Estados Unidos",sudafrica:"Sudáfrica"};
+const LANG = {de:"alemán",en:"inglés",zh:"chino",es:"español"};
+const tip = $("#tip");
+function showTip(e, html){tip.innerHTML=html;tip.style.opacity=1;const x=Math.min(e.clientX+14, innerWidth-340);tip.style.left=x+"px";tip.style.top=(e.clientY+14)+"px";}
+function hideTip(){tip.style.opacity=0}
+function el(tag, attrs={}, parent){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+$("#themeBtn").onclick=()=>{const cur=document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");const nx=cur==="dark"?"light":"dark";document.documentElement.dataset.theme=nx;try{localStorage.setItem("theme",nx)}catch(e){};render()};
+
+let D;
+fetch("data.json").then(r=>r.json()).then(d=>{D=d;init();render()});
+
+// category color by role: targets get slots 1-3, the other UNESCO categories share slot 4
+function catColor(c){
+  const t=D.params.targets;
+  if(c===t[0])return css("--c1"); if(c===t[1])return css("--c2"); if(c===t[2])return css("--c3");
+  if(c==="none")return css("--none"); if(c==="no_consensus")return css("--nocons");
+  return css("--c4");
+}
+function catName(c){
+  if(c==="none")return "Ninguna categoría"; if(c==="no_consensus")return "Sin consenso (menos de 4 de 7)";
+  const x=D.codebook.categories.find(k=>k.id===c); return x?`${c} ${x.name_es}`:c;
+}
+const OUTCOMES = () => [...D.params.targets, "other", "none", "no_consensus"];
+function outcomeOf(c){return D.params.targets.includes(c)||c==="none"||c==="no_consensus"?c:"other"}
+function outcomeName(o){return o==="other"?"Otra categoría UNESCO (6.1, 6.2, 6.6, 6.7)":catName(o)}
+function outcomeColor(o){return o==="other"?css("--c4"):catColor(o)}
+
+function init(){
+  const P=D.params;
+  const acc=D.fragments.filter(f=>P.targets.includes(f.majority)).length;
+  $("#heroTiles").innerHTML=[
+    [D.n_fragments,"fragmentos recuperados"],[D.n_classifications,"clasificaciones del panel"],
+    [acc,"aceptados en una categoría objetivo"],[D.agreement.panel.fleiss_kappa,"κ de Fleiss del panel"]
+  ].map(([v,l])=>`<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+
+  const steps=[
+    ["Fragmentos","15 documentos en su idioma original, cortados en fragmentos de 500 caracteres.",`colección ${P.collection}`],
+    ["Recuperación",`Por país y categoría, los ${P.k_per_cell} fragmentos más cercanos a la descripción de la categoría.`,`${D.n_fragments} fragmentos únicos`],
+    ["Panel",`7 modelos leen cada fragmento con el anterior y el siguiente, y eligen categoría.`,`${D.n_classifications} votos`],
+    ["Bases por categoría",`Se acepta un fragmento si ${P.majority} de 7 coinciden.`,`${acc} aceptados`],
+    ["Distancias","Coseno entre centroides de cada par de países, por categoría.",`${P.targets.length} matrices`],
+    ["Control","Recalcular en inglés y medir el acuerdo del panel.",`κ = ${D.agreement.panel.fleiss_kappa}`],
+  ];
+  $("#flow").innerHTML=steps.map((s,i)=>`<div class="box"><b>${i+1}. ${s[0]}</b><span>${s[1]}</span><span class="n">${s[2]}</span></div>`).join("");
+
+  $("#retrNote").innerHTML=`Tres de las siete categorías de UNESCO, elegidas para esta prueba: ${P.targets.map(c=>"<b>"+esc(catName(c))+"</b>").join(", ")}. China entra sin el 15.º Plan Quinquenal, como en la tesis. Un mismo fragmento puede recuperarse para más de una categoría.`;
+  const langs={}; D.fragments.forEach(f=>langs[f.country]=f.language);
+  let h=`<tr><th>País</th><th>Idioma</th>${P.targets.map(c=>`<th>${c}</th>`).join("")}<th>Únicos</th></tr>`;
+  for(const c of Object.keys(CTY)){
+    const fs=D.fragments.filter(f=>f.country===c);
+    h+=`<tr><td>${CTY[c]}</td><td>${LANG[langs[c]]||""}</td>${P.targets.map(t=>`<td>${fs.filter(f=>f.retrieved_for.some(r=>r.category===t)).length}</td>`).join("")}<td>${fs.length}</td></tr>`;
+  }
+  $("#retrTable").innerHTML=h;
+
+  $("#catSel").innerHTML=P.targets.map(c=>`<option value="${c}">${esc(catName(c))}</option>`).join("");
+  $("#ctySel").innerHTML=`<option value="">Todos</option>`+Object.entries(CTY).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+  $("#fCty").innerHTML=`<option value="">Todos</option>`+Object.entries(CTY).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+  $("#fCat").innerHTML=`<option value="">Todos</option>`+OUTCOMES().map(o=>`<option value="${o}">${esc(outcomeName(o))}</option>`).join("");
+  const best=P.targets.slice().sort((a,b)=>Object.values(D.results.categories[b].n_accepted).filter(x=>x).length-Object.values(D.results.categories[a].n_accepted).filter(x=>x).length)[0];
+  $("#catSel").value=best;
+  ["#catSel","#ctySel"].forEach(s=>$(s).onchange=renderDist);
+  ["#fCty","#fCat"].forEach(s=>$(s).onchange=renderFrags);
+
+  $("#limits").innerHTML=`Es una corrida pequeña: ${P.k_per_cell} fragmentos por país y categoría, y solo ${P.targets.length} de las 7 categorías. Los centroides de un país pueden descansar en uno o dos fragmentos, así que una distancia puede cambiar mucho con un solo fragmento más. Los fragmentos se recuperan por cercanía a la descripción de la categoría, no son una muestra representativa de cada documento. La traducción para el control de idioma la hace un modelo (${esc(P.translation_model)}). Todo lo que aparece aquí sale de <code>web/data/miniprueba_unesco.json</code>; nada se escribió a mano.`;
+  $("#foot").innerHTML=`Generado ${new Date(D.generated).toLocaleString("es-MX")} · libro de códigos ${D.params.codebook_hash} · modelo de embeddings ${esc(P.embedding_model)} · panel: ${P.panel.map(j=>`${esc(j.model)} (${j.origin==="western"?"occ.":"chino"})`).join(", ")}.`;
+}
+
+function render(){ if(!D)return; renderLegends(); renderVotes(); renderAgreement(); renderCoverage(); renderSchiff(); renderDist(); renderRobust(); renderFrags(); }
+
+function renderLegends(){
+  $("#catLegend").innerHTML=OUTCOMES().map(o=>`<span><i style="background:${outcomeColor(o)}"></i>${esc(outcomeName(o))}</span>`).join("");
+  $("#covLegend").innerHTML=$("#catLegend").innerHTML;
+}
+
+function renderVotes(){
+  const svg=$("#voteMatrix"); svg.innerHTML="";
+  const models=D.params.panel; const frs=[...D.fragments].sort((a,b)=>(a.country+a.majority).localeCompare(b.country+b.majority));
+  const cw=Math.max(6,Math.min(12,Math.floor(900/frs.length))), ch=20, left=150, top=22;
+  const W=left+frs.length*cw+10, H=top+models.length*ch+30;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  models.forEach((m,i)=>{const t=el("text",{x:left-8,y:top+i*ch+14,"text-anchor":"end"},svg);t.textContent=`${m.name} · ${m.origin==="western"?"occ.":"chino"}`});
+  let prev=null;
+  frs.forEach((f,j)=>{
+    if(f.country!==prev){const t=el("text",{x:left+j*cw,y:top-6},svg);t.textContent=CTY[f.country].slice(0,3);prev=f.country;el("line",{x1:left+j*cw-1,x2:left+j*cw-1,y1:top-2,y2:top+models.length*ch,stroke:css("--rule")},svg)}
+    models.forEach((m,i)=>{
+      const v=(f.votes||{})[m.name]||{}; const c=v.category||"none";
+      const r=el("rect",{x:left+j*cw,y:top+i*ch,width:cw-1.5,height:ch-2,rx:2,fill:outcomeColor(outcomeOf(c))},svg);
+      r.onmousemove=e=>showTip(e,`<b>${CTY[f.country]} · ${esc(m.name)}</b><br>${esc(catName(c))}<br><i>${esc(v.rationale||v.error||"")}</i><br>Mayoría: ${esc(catName(f.majority))} (${f.majority_n}/${f.n_votes})`);
+      r.onmouseleave=hideTip;
+    });
+  });
+  const t=el("text",{x:left,y:H-8},svg); t.textContent=`${frs.length} fragmentos, agrupados por país`;
+}
+
+function renderAgreement(){
+  const A=D.agreement;
+  $("#agrTiles").innerHTML=[["Panel completo",A.panel],["Modelos occidentales",A.western],["Modelos chinos",A.chinese]].map(([n,a])=>`<div class="tile"><div class="l">${n}</div><div class="v">κ ${a.fleiss_kappa}</div><div class="l">α ${a.alpha_nominal} · acuerdo exacto ${(a.pct_exact*100).toFixed(1)} %</div></div>`).join("");
+  const svg=$("#perModel"); svg.innerHTML="";
+  const pm=Object.entries(D.per_model).filter(([,v])=>v.agree_with_majority!=null).sort((a,b)=>b[1].agree_with_majority-a[1].agree_with_majority);
+  const left=150,bh=18,gap=8,W=620,top=26,H=top+pm.length*(bh+gap)+10, x=v=>left+v*(W-left-50);
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width","100%"); svg.style.maxWidth=W+"px";
+  const tt=el("text",{x:0,y:14},svg); tt.textContent="Coincidencia de cada modelo con la mayoría del panel"; tt.style.fill=css("--ink");
+  [0,.5,1].forEach(g=>{el("line",{x1:x(g),x2:x(g),y1:top-4,y2:H-6,stroke:css("--rule")},svg)});
+  pm.forEach(([k,v],i)=>{const y=top+i*(bh+gap);
+    const t=el("text",{x:left-8,y:y+13,"text-anchor":"end"},svg); t.textContent=`${k} · ${v.origin==="western"?"occ.":"chino"}`;
+    const r=el("rect",{x:x(0),y,width:Math.max(4,x(v.agree_with_majority)-x(0)),height:bh,rx:4,fill:v.origin==="western"?css("--c1"):css("--c2")},svg);
+    r.onmousemove=e=>showTip(e,`${k}: ${(v.agree_with_majority*100).toFixed(1)} % de sus votos coinciden con la mayoría`); r.onmouseleave=hideTip;
+    const vt=el("text",{x:x(v.agree_with_majority)+6,y:y+13,class:"val"},svg); vt.textContent=(v.agree_with_majority*100).toFixed(0)+" %";
+  });
+}
+
+function stacked(svgSel, rows, keys, colorOf, nameOf){
+  const svg=$(svgSel); svg.innerHTML="";
+  const left=120,bh=22,gap=10,W=760,top=6,H=top+rows.length*(bh+gap)+24;
+  const max=Math.max(...rows.map(r=>keys.reduce((s,k)=>s+(r.v[k]||0),0)),1);
+  const x=v=>left+v/max*(W-left-40);
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width","100%"); svg.style.maxWidth=W+"px";
+  rows.forEach((r,i)=>{const y=top+i*(bh+gap); let acc=0;
+    const t=el("text",{x:left-8,y:y+15,"text-anchor":"end"},svg); t.textContent=r.label;
+    const tot=keys.reduce((s,k)=>s+(r.v[k]||0),0);
+    keys.forEach(k=>{const n=r.v[k]||0; if(!n)return;
+      const x0=x(acc), x1=x(acc+n); acc+=n;
+      const rc=el("rect",{x:x0+1,y,width:Math.max(1,x1-x0-2),height:bh,rx:3,fill:colorOf(k)},svg);
+      rc.onmousemove=e=>showTip(e,`<b>${r.label}</b><br>${esc(nameOf(k))}: ${n} de ${tot}`); rc.onmouseleave=hideTip;
+      if(x1-x0>22){const vt=el("text",{x:(x0+x1)/2,y:y+15,"text-anchor":"middle",class:"val"},svg); vt.textContent=n; vt.style.fill="#fff"}
+    });
+    const tv=el("text",{x:x(acc)+6,y:y+15,class:"val"},svg); tv.textContent=tot;
+  });
+}
+function renderCoverage(){
+  const rows=Object.keys(CTY).map(c=>{const v={}; D.fragments.filter(f=>f.country===c).forEach(f=>{const o=outcomeOf(f.majority);v[o]=(v[o]||0)+1}); return {label:CTY[c],v}});
+  stacked("#coverage",rows,OUTCOMES(),outcomeColor,outcomeName);
+}
+function renderSchiff(){
+  const keys=["education_for_ai","ai_for_education","both","neither","no_consensus"];
+  const nm={education_for_ai:"Educación para la IA",ai_for_education:"IA para la educación",both:"Ambas",neither:"Ninguna",no_consensus:"Sin consenso"};
+  const col={education_for_ai:css("--c1"),ai_for_education:css("--c2"),both:css("--c7"),neither:css("--none"),no_consensus:css("--nocons")};
+  $("#schLegend").innerHTML=keys.map(k=>`<span><i style="background:${col[k]}"></i>${nm[k]}</span>`).join("");
+  const rows=Object.keys(CTY).map(c=>({label:CTY[c],v:D.schiff[c]||{}}));
+  stacked("#schiff",rows,keys,k=>col[k],k=>nm[k]);
+}
+
+function seqColor(v,max){const steps=["--seq-0","--seq-1","--seq-2","--seq-3","--seq-4","--seq-5"];const i=Math.min(5,Math.floor((v/(max||1))*5.999));return css(steps[i])}
+function heat(svgSel, M, max, counts){
+  const svg=$(svgSel); svg.innerHTML="";
+  if(!M||!M.countries.length){svg.setAttribute("viewBox","0 0 300 40");const t=el("text",{x:0,y:20},svg);t.textContent="Sin fragmentos aceptados en esta categoría.";return}
+  const n=M.countries.length, cs=46, left=140, top=80, W=left+n*cs+50, H=top+n*cs+6;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width","100%"); svg.style.maxWidth=W+"px";
+  M.countries.forEach((c,i)=>{
+    const t=el("text",{x:left-6,y:top+i*cs+cs/2+4,"text-anchor":"end"},svg); t.textContent=`${CTY[c]}${counts?` (${counts[c]})`:""}`;
+    const u=el("text",{x:0,y:0,transform:`translate(${left+i*cs+cs/2+4},${top-6}) rotate(-50)`},svg); u.textContent=CTY[c];
+  });
+  M.matrix.forEach((row,i)=>row.forEach((v,j)=>{
+    const r=el("rect",{x:left+j*cs+1,y:top+i*cs+1,width:cs-2,height:cs-2,rx:3,fill:i===j?css("--surface"):seqColor(v,max),stroke:i===j?css("--rule"):"none"},svg);
+    if(i!==j){r.onmousemove=e=>showTip(e,`${CTY[M.countries[i]]} ↔ ${CTY[M.countries[j]]}<br>distancia ${v.toFixed(3)}`);r.onmouseleave=hideTip;
+      const t=el("text",{x:left+j*cs+cs/2,y:top+i*cs+cs/2+4,"text-anchor":"middle",class:"val"},svg);t.textContent=v.toFixed(2);const lvl=Math.min(5,Math.floor((v/(max||1))*5.999));const dark=css("--paper")==="#121212";t.style.fill=dark?(lvl>=3?"#0b0b0b":"#ffffff"):(lvl>=3?"#ffffff":"#0b0b0b")}
+  }));
+}
+function maxOf(...Ms){let m=0;Ms.forEach(M=>M&&M.matrix.forEach(r=>r.forEach(v=>m=Math.max(m,v))));return m}
+function renderDist(){
+  const cat=$("#catSel").value, R=D.results.categories[cat];
+  heat("#heatOrig",R.dist_original,maxOf(R.dist_original),R.n_accepted);
+  const svg=$("#pca"); svg.innerHTML="";
+  const pts=R.pca, W=420,H=320,pad=24;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width","100%"); svg.style.maxWidth=W+"px";
+  if(!pts.length){const t=el("text",{x:10,y:20},svg);t.textContent="Muy pocos fragmentos para proyectar.";return}
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const sx=v=>pad+(v-Math.min(...xs))/((Math.max(...xs)-Math.min(...xs))||1)*(W-2*pad);
+  const sy=v=>H-pad-(v-Math.min(...ys))/((Math.max(...ys)-Math.min(...ys))||1)*(H-2*pad);
+  const hl=$("#ctySel").value;
+  const order=[...pts].sort((a,b)=>(a.country===hl)-(b.country===hl));
+  order.forEach(p=>{const on=!hl||p.country===hl;
+    const c=el("circle",{cx:sx(p.x),cy:sy(p.y),r:on&&hl?7:5.5,fill:on?(hl?css("--c1"):css("--frame")):css("--none"),stroke:css("--surface"),"stroke-width":2,opacity:on?0.95:0.6},svg);
+    const f=D.fragments.find(x=>x.id===p.id);
+    c.onmousemove=e=>showTip(e,`<b>${CTY[p.country]}</b><br>${esc((f?.text||"").slice(0,220))}…`); c.onmouseleave=hideTip;
+    if(on&&hl){const t=el("text",{x:sx(p.x)+9,y:sy(p.y)+4,class:"val"},svg);t.textContent=CTY[p.country].slice(0,3)}
+  });
+  if(!hl){pts.forEach(p=>{const t=el("text",{x:sx(p.x)+7,y:sy(p.y)-6},svg);t.textContent=CTY[p.country].slice(0,3);t.style.fontSize="10px"})}
+}
+function renderRobust(){
+  const cats=D.params.targets;
+  $("#rhoTiles").innerHTML=cats.map(c=>{const r=D.results.categories[c].spearman_original_vs_english;return `<div class="tile"><div class="l">${esc(catName(c))}</div><div class="v">${r==null?"—":"ρ "+r}</div><div class="l">${r==null?"menos de 4 países con fragmentos":"original vs. inglés"}</div></div>`}).join("");
+  const cat=$("#catSel").value, R=D.results.categories[cat];
+  const mx=maxOf(R.dist_original,R.dist_english);
+  heat("#heatA",R.dist_original,mx); heat("#heatB",R.dist_english,mx);
+}
+$("#catSel")?.addEventListener("change",()=>{renderRobust()});
+
+function renderFrags(){
+  const c=$("#fCty").value, o=$("#fCat").value;
+  const fs=D.fragments.filter(f=>(!c||f.country===c)&&(!o||outcomeOf(f.majority)===o));
+  $("#fragList").innerHTML=`<p class="note">${fs.length} fragmentos</p>`+fs.map(f=>`<div class="frag">
+    <div class="meta">${CTY[f.country]} · ${esc(f.policy_id)} · fragmento ${f.chunk_index} · ${LANG[f.language]||f.language}</div>
+    <div class="chips" style="margin:6px 0"><span class="chip" style="border-color:${outcomeColor(outcomeOf(f.majority))}">mayoría: <b>${esc(catName(f.majority))}</b> (${f.majority_n}/${f.n_votes})</span><span class="chip">Schiff: <b>${esc(f.schiff_majority)}</b></span></div>
+    <div class="txt">${esc(f.text)}</div>
+    ${f.text_en&&f.language!=="en"?`<details><summary>Traducción usada en el control de idioma</summary><div class="txt">${esc(f.text_en)}</div></details>`:""}
+    <details><summary>Votos del panel</summary><table class="t">${Object.entries(f.votes||{}).map(([m,v])=>`<tr><td>${esc(m)}</td><td style="text-align:left">${esc(catName(v.category||"none"))}</td><td style="text-align:left;color:var(--ink-2)">${esc(v.rationale||v.error||"")}</td></tr>`).join("")}</table></details>
+  </div>`).join("");
+}
+</script>
+</body>
+</html>
