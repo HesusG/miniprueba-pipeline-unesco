@@ -1,0 +1,70 @@
+{
+ "id": "cn_ai_edu_action_2026_chunk_0005",
+ "country": "china",
+ "policy_id": "cn_ai_edu_action_2026",
+ "chunk_index": 5,
+ "text": "家通用语言文字，促进教育优质均衡。研发应用智能辅具，支撑特殊教育学生的监测、评估和康复训练，促进教育全纳包容发展。\n(七)利用人工智能赋能教师教学。围绕课前、课中、课后教育教学全过程，加强智能教学系统应用，为教师减负增效。支撑教师课前备课，辅助教师开展学情分析，支撑多模态教学资源自动生成、方案优化和教学过程模拟，实现人机共创备课。探索人机协同教学模式，利用智能系统参与教学环节，开发强交互虚拟仿真实验，提升沉浸式体验和个性评价反馈，提升课堂育人质效。辅助教师开展作业管理，推进智能批改、答疑和辅导。利用智能技术分析课堂教学行为，开展人工智能循证教研实践，构建适应智能时代的教师研修模式，帮助教师提升教学质量。\n(八)利用人工智能赋能教育治理。围绕便捷服务、精准管理、科学决策，打造教育智能大脑。建设国家人才供需对接大数据平台，开展人才需求调查、预测分析和评价反馈。利用智能技术科学预测人口变化和产业发展趋势，健全资源统筹调配和学科专业设置调整机制。推动智能命题、智能组卷、智能监考、智能评卷等应用。研发教育评价智能化工具，探索开展学生学习全过程纵向评价、德智体美劳全要素横向评价。打造智能化就业服务",
+ "text_en": "Use a common language for communication to promote high-quality and balanced education. Develop and apply intelligent assistive tools to support the monitoring, assessment, and rehabilitation training of special education students, promoting inclusive development in education.\n\n(7) Empower teachers' teaching with artificial intelligence. Strengthen the application of intelligent teaching systems throughout the entire educational process—before, during, and after class—to reduce teachers' workload and increase efficiency. Support teachers in lesson preparation, assist in student learning analysis, and facilitate the automatic generation of multimodal teaching resources, optimization of plans, and simulation of teaching processes, achieving collaborative lesson preparation between humans and machines. Explore human-machine collaborative teaching models, utilize intelligent systems in teaching activities, develop highly interactive virtual simulation experiments, enhance immersive experiences and personalized feedback, and improve the quality and effectiveness of classroom education. Assist teachers in managing assignments, promote intelligent grading, answering questions, and tutoring. Use intelligent technology to analyze classroom teaching behaviors, conduct evidence-based research practices in artificial intelligence, and build a teacher training model that adapts to the intelligent era, helping teachers improve teaching quality.\n\n(8) Empower educational governance with artificial intelligence. Focus on convenient services, precise management, and scientific decision-making to create an intelligent educational brain. Build a national big data platform for talent supply and demand matching, conduct talent demand surveys, predictive analysis, and evaluation feedback. Use intelligent technology to scientifically predict population changes and industry development trends, and improve mechanisms for resource allocation and adjustments in academic disciplines and specialties. Promote applications such as intelligent question generation, intelligent paper compilation, intelligent proctoring, and intelligent grading. Develop intelligent tools for educational evaluation, and explore conducting longitudinal evaluations of the entire learning process for students, as well as horizontal evaluations covering all aspects of moral, intellectual, physical, aesthetic, and labor education. Create intelligent employment services.",
+ "majority": "6.5",
+ "majority_n": 7,
+ "schiff_majority": "ai_for_education",
+ "votes": {
+  "gpt": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment focuses on utilizing AI to enhance teaching processes and improve educational outcomes for both teachers and students.",
+   "origin": "western"
+  },
+  "gemini": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment details concrete plans for using AI to empower teachers in their teaching, manage education, and improve educational governance, covering various aspects from lesson preparation to assessment and administrative tasks.",
+   "origin": "western"
+  },
+  "llama": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment mainly discusses using AI in education management, teaching, learning, and assessment, such as intelligent tutoring, smart education systems, and AI-powered evaluation tools.",
+   "origin": "western"
+  },
+  "qwen": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment mainly addresses concrete plans for using AI in teaching and learning, specifically focusing on AI tools to support teachers in their instructional processes across the teaching cycle.",
+   "origin": "chinese"
+  },
+  "deepseek": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment mainly discusses concrete plans for using AI in teaching, learning, and assessment, specifically focusing on AI tools for teachers and students in various educational contexts.",
+   "origin": "chinese"
+  },
+  "glm": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment outlines concrete plans for applying AI to empower student learning, teacher teaching, and education governance, which directly aligns with master plans for using AI in education management, teaching, learning, and assessment.",
+   "origin": "chinese"
+  },
+  "kimi": {
+   "category": "6.5",
+   "schiff": "ai_for_education",
+   "rationale": "The fragment details concrete plans for using AI in education management, teaching, learning and assessment, including AI-powered teaching support systems, intelligent assessment tools, special education assistive devices, and educational governance applications.",
+   "origin": "chinese"
+  }
+ },
+ "embedding_first": [
+  -0.0721,
+  -0.1038,
+  0.0487,
+  -0.0212,
+  -0.0397,
+  0.0418,
+  -0.0099,
+  -0.1663,
+  0.1171,
+  0.0948,
+  0.1551,
+  0.4315
+ ],
+ "embedding_dim": 384
+}

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El pipeline, explicado fácil</title>
+<meta name="description" content="Explicación sencilla, paso a paso, de cómo la tesis compara políticas de educación en inteligencia artificial de distintos países.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --paper:#FAFCFE; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --muted:#8a8984; --rule:#e3e6ec;
+  --frame:#023BF2; --frame-soft:#e8eeff; --land:#e6e8ec; --on:#023BF2;
+  --c1:#2a78d6; --c2:#eb6834; --none:#d6d4cd;
+  --code-bg:#0f1733; --code-ink:#e8eeff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#121212; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e86; --rule:#2c2c2a;
+    --frame:#6f8dff; --frame-soft:#1c2340; --land:#2a2a28; --on:#6f8dff;
+    --c1:#3987e5; --c2:#d95926; --none:#4a4945;
+    --code-bg:#0b1024; --code-ink:#dfe6ff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#121212; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e86; --rule:#2c2c2a;
+  --frame:#6f8dff; --frame-soft:#1c2340; --land:#2a2a28; --on:#6f8dff;
+  --c1:#3987e5; --c2:#d95926; --none:#4a4945;
+  --code-bg:#0b1024; --code-ink:#dfe6ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:18px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header{padding:48px 0 28px;border-bottom:3px solid var(--frame);position:relative}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--frame)}
+h1{font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(32px,6vw,52px);line-height:1.05;margin:10px 0 14px}
+h2{font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(24px,4vw,32px);line-height:1.15;margin:0 0 10px}
+.big{font-size:21px;color:var(--ink-2);max-width:680px}
+section{padding:48px 0;border-bottom:1px solid var(--rule)}
+.num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--frame);color:#fff;font-family:Archivo,sans-serif;font-weight:800;font-size:20px;margin-bottom:10px}
+p{margin:0 0 14px;max-width:680px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;margin:18px 0}
+.map svg{width:100%;height:auto;display:block}
+.pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--frame-soft);color:var(--frame);padding:3px 10px;border-radius:999px;margin:2px 4px 2px 0}
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}
+.doc{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;font-size:15px;background:var(--surface);cursor:default}
+.doc b{display:block}
+.doc span{color:var(--ink-2);font-size:13.5px}
+.doc.on{border-color:var(--frame);box-shadow:0 0 0 2px var(--frame-soft)}
+.zh{font-family:"Noto Sans SC","IBM Plex Sans",sans-serif;font-size:17px;line-height:1.9}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tabs button{font:inherit;font-size:15px;padding:6px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.tabs button.act{background:var(--frame);border-color:var(--frame);color:#fff}
+.frag{max-height:260px;overflow:auto;white-space:pre-wrap;font-size:16px}
+.frag mark{background:var(--frame-soft);color:inherit;padding:0 2px;border-radius:3px}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:14px;line-height:1.55;margin:14px 0}
+pre .c{color:#8fa3d9}
+.nums{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.nums span{font-family:"IBM Plex Mono",monospace;font-size:14px;padding:6px 8px;border-radius:6px;background:var(--frame-soft);color:var(--frame)}
+.nums .more{background:none;color:var(--muted)}
+.arrow{font-size:28px;text-align:center;color:var(--frame);margin:4px 0}
+.votes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.vote{border:1px solid var(--rule);border-radius:12px;padding:12px;background:var(--surface);text-align:center}
+.vote .m{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-2)}
+.vote .o{font-size:12px;color:var(--muted)}
+.vote .ok{font-family:Archivo,sans-serif;font-weight:800;font-size:22px;color:var(--frame);margin:4px 0}
+.verdict{font-family:Archivo,sans-serif;font-weight:800;font-size:24px;margin:16px 0 4px}
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:10px;font-size:16px}
+.dots{display:flex;flex-wrap:wrap;gap:4px}
+.dot{width:16px;height:16px;border-radius:50%}
+.row .n{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ink-2);text-align:right}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:15px;color:var(--ink-2);margin:6px 0 14px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:6px;vertical-align:-2px}
+.findings{display:grid;gap:12px;margin-top:18px}
+.finding{border:1px solid var(--rule);border-radius:12px;padding:14px 16px;background:var(--surface);font-size:17px}
+.finding b{font-family:Archivo,sans-serif}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:14px;padding:8px 10px;border-radius:6px;max-width:280px;opacity:0;z-index:9;line-height:1.4}
+a{color:var(--frame)}
+footer{padding:30px 0 60px;color:var(--muted);font-size:14px}
+.theme{position:absolute;top:18px;right:0;font:inherit;font-size:14px;padding:4px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer}
+@media (max-width:560px){.row{grid-template-columns:96px 1fr 36px;font-size:14px}.dot{width:12px;height:12px}}
+</style>
+</head>
+<body>
+<div class="tip" id="tip"></div>
+<header>
+  <div class="wrap" style="position:relative">
+    <button class="theme" id="themeBtn" aria-label="Cambiar tema">◐</button>
+    <div class="eyebrow">Tesis · Hesus García Cobos · UPAEP</div>
+    <h1>Cómo comparamos políticas de muchos países, explicado fácil</h1>
+    <p class="big">Varios gobiernos escribieron planes sobre inteligencia artificial y educación. Son documentos largos y en idiomas distintos. Esta página muestra, paso a paso, cómo una computadora nos ayuda a leerlos y compararlos.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="num">1</div>
+  <h2>Juntamos las políticas</h2>
+  <p>Reunimos 15 documentos oficiales de 7 países. Cada uno está en su idioma original: inglés, español, alemán o chino.</p>
+  <div class="card map"><svg id="map" viewBox="0 0 960 470" role="img" aria-label="Mapa con los siete países del estudio"></svg></div>
+  <div class="docs" id="docs"></div>
+</section>
+
+<section>
+  <div class="num">2</div>
+  <h2>Los cortamos en pedazos</h2>
+  <p>Un documento entero es demasiado para compararlo de una vez. Por eso lo cortamos en pedazos de 500 caracteres, como fichas. En total salen 3,095 pedazos.</p>
+  <p>Este es uno de ellos. Viene de un plan de acción de China sobre inteligencia artificial en la educación.</p>
+  <div class="card">
+    <div class="tabs"><button class="act" data-t="zh">Original en chino</button><button data-t="en">Traducción al inglés</button></div>
+    <div class="frag" id="frag"></div>
+    <p style="font-size:14px;color:var(--muted);margin:10px 0 0" id="fragMeta"></p>
+  </div>
+</section>
+
+<section>
+  <div class="num">3</div>
+  <h2>Cada pedazo se vuelve una lista de números</h2>
+  <p>La computadora no entiende palabras. Entiende números. Un modelo de lenguaje convierte cada pedazo en una lista de 384 números. A esa lista se le llama <em>embedding</em>.</p>
+  <p>La idea importante es esta: <b>dos textos que dicen cosas parecidas reciben números parecidos, aunque estén en idiomas distintos.</b> Así podemos comparar un texto chino con uno colombiano sin traducirlos.</p>
+  <div class="card">
+    <div style="font-size:15px;color:var(--ink-2)">Los primeros números del pedazo de arriba:</div>
+    <div class="nums" id="nums"></div>
+    <pre><span class="c"># Así se hace, en tres líneas de Python</span>
+from sentence_transformers import SentenceTransformer
+modelo = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+numeros = modelo.encode(pedazo)   <span class="c"># una lista de 384 números</span></pre>
+  </div>
+</section>
+
+<section>
+  <div class="num">4</div>
+  <h2>Siete modelos leen el pedazo y lo clasifican</h2>
+  <p>Luego le pedimos a 7 modelos de inteligencia artificial que lean el pedazo, junto con el pedazo anterior y el siguiente para entender el contexto. Tres modelos son de empresas occidentales y cuatro de empresas chinas.</p>
+  <p>Cada modelo elige de qué tema habla el pedazo, usando la lista de temas de la guía de UNESCO para gobiernos. Las reglas se fijaron antes de empezar y no se cambian.</p>
+  <pre><span class="c"># La instrucción, resumida</span>
+"Lee el PEDAZO. El texto de antes y de después es solo contexto.
+ Elige el tema de UNESCO del que habla principalmente, o 'ninguno'.
+ Responde solo con: tema, tipo y una frase que lo justifique."</pre>
+  <div class="card">
+    <div class="votes" id="votes"></div>
+    <div class="verdict" id="verdict"></div>
+    <p style="margin:0;color:var(--ink-2)" id="verdictSub"></p>
+  </div>
+  <p style="font-size:15px;color:var(--muted)">Cuando al menos 4 de los 7 modelos coinciden, aceptamos la clasificación. Si no coinciden, lo marcamos como "sin consenso" y no lo usamos.</p>
+</section>
+
+<section>
+  <div class="num">5</div>
+  <h2>Lo que salió de la prueba</h2>
+  <p>Hicimos una prueba pequeña con tres temas de UNESCO. Tomamos, para cada país, los pedazos que más se parecían a cada tema, y los 7 modelos decidieron de qué hablaban de verdad. Aquí mostramos los dos temas con más resultados.</p>
+  <div class="legend">
+    <span><i style="background:var(--c1)"></i>Enseñanza, aprendizaje y docentes</span>
+    <span><i style="background:var(--c2)"></i>Ética, equidad y datos</span>
+    <span><i style="background:var(--none)"></i>Otro tema, ninguno o sin consenso</span>
+  </div>
+  <div class="card"><div class="rows" id="rows"></div>
+  <p style="font-size:14px;color:var(--muted);margin:14px 0 0">Cada bolita es un pedazo que revisó el panel. El número es el total de pedazos revisados por país.</p></div>
+  <div class="findings" id="findings"></div>
+  <p style="margin-top:24px">¿Quieres ver todos los datos, los votos de cada modelo y las distancias entre países? <a href="./">Abre la versión detallada</a>.</p>
+</section>
+
+<section>
+  <h2>Qué no dice esta prueba</h2>
+  <p>Es una prueba chica: pocos pedazos por país y solo algunos temas. Sirve para ver que el método funciona. Los resultados de la tesis saldrán de la corrida completa.</p>
+</section>
+
+</main>
+<footer class="wrap">Todos los números salen de <code>data.json</code>, generado por <code>pipeline_v3/miniprueba_unesco.py</code> en el repositorio de la tesis. Nada se escribió a mano.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const tip=$("#tip");
+const show=(e,h)=>{tip.innerHTML=h;tip.style.opacity=1;tip.style.left=Math.min(e.clientX+14,innerWidth-300)+"px";tip.style.top=(e.clientY+14)+"px"};
+const hide=()=>tip.style.opacity=0;
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+$("#themeBtn").onclick=()=>{const cur=document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");const nx=cur==="dark"?"light":"dark";document.documentElement.dataset.theme=nx;try{localStorage.setItem("theme",nx)}catch(e){};drawAll()};
+
+const PAISES={
+  alemania:{n:"Alemania",iso:"276",idioma:"alemán",doc:"Estrategia de IA del Gobierno Federal (2020)",frag:230},
+  australia:{n:"Australia",iso:"036",idioma:"inglés",doc:"AI Action Plan (2021)",frag:161},
+  canada:{n:"Canadá",iso:"124",idioma:"inglés",doc:"Estrategia de IA (2026)",frag:210},
+  china:{n:"China",iso:"156",idioma:"chino",doc:"9 documentos nacionales y locales (2025 y 2026)",frag:271},
+  colombia:{n:"Colombia",iso:"170",idioma:"español",doc:"CONPES 4144 (2025)",frag:764},
+  eeuu:{n:"Estados Unidos",iso:"840",idioma:"inglés",doc:"AI Action Plan (2025)",frag:156},
+  sudafrica:{n:"Sudáfrica",iso:"710",idioma:"inglés",doc:"Comisión Presidencial 4IR (2020)",frag:1303},
+};
+const byIso=Object.fromEntries(Object.entries(PAISES).map(([k,v])=>[v.iso,k]));
+let D,E,world,lang="zh";
+
+Promise.all([fetch("data.json").then(r=>r.json()),fetch("ejemplo.json").then(r=>r.json()),
+  fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then(r=>r.json()).catch(()=>null)])
+.then(([d,e,w])=>{D=d;E=e;world=w;drawAll()});
+
+function drawAll(){ if(!D)return; drawMap(); drawDocs(); drawFrag(); drawNums(); drawVotes(); drawRows(); drawFindings(); }
+
+function drawMap(){
+  const svg=d3.select("#map"); svg.selectAll("*").remove();
+  if(!world){svg.append("text").attr("x",20).attr("y",40).text("No se pudo cargar el mapa.").attr("fill",css("--ink-2"));return}
+  const land=topojson.feature(world,world.objects.countries).features.filter(f=>f.id!=="010");
+  const proj=d3.geoNaturalEarth1().fitSize([960,470],{type:"FeatureCollection",features:land});
+  const path=d3.geoPath(proj);
+  svg.selectAll("path").data(land).join("path").attr("d",path)
+    .attr("fill",f=>byIso[f.id]?css("--on"):css("--land"))
+    .attr("stroke",css("--paper")).attr("stroke-width",0.6)
+    .on("mousemove",(ev,f)=>{const k=byIso[f.id];if(!k)return;const p=PAISES[k];show(ev,`<b>${p.n}</b><br>${esc(p.doc)}<br>Idioma: ${p.idioma}<br>${p.frag.toLocaleString("es-MX")} pedazos`);hl(k)})
+    .on("mouseleave",()=>{hide();hl(null)});
+  Object.entries(PAISES).forEach(([k,p])=>{
+    const f=land.find(x=>x.id===p.iso); if(!f)return;
+    const [x,y]=path.centroid(f);
+    const lx = k==="eeuu"?x+10:k==="canada"?x-10:x;
+    svg.append("text").attr("x",lx).attr("y",k==="canada"?y+22:y+4).attr("text-anchor","middle")
+      .attr("font-family","IBM Plex Sans").attr("font-size",15).attr("font-weight",600)
+      .attr("fill",css("--ink")).attr("paint-order","stroke").attr("stroke",css("--paper")).attr("stroke-width",4)
+      .text(p.n);
+  });
+}
+function hl(k){document.querySelectorAll(".doc").forEach(d=>d.classList.toggle("on",d.dataset.k===k))}
+function drawDocs(){
+  $("#docs").innerHTML=Object.entries(PAISES).map(([k,p])=>`<div class="doc" data-k="${k}"><b>${p.n}</b><span>${esc(p.doc)}</span><br><span class="pill">${p.idioma}</span></div>`).join("");
+}
+
+function drawFrag(){
+  document.querySelectorAll(".tabs button").forEach(b=>{b.onclick=()=>{lang=b.dataset.t;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("act",x===b));drawFrag()}});
+  const f=$("#frag");
+  if(lang==="zh"){f.className="frag zh";f.innerHTML=esc(E.text).replace("(七)利用人工智能赋能教师教学","<mark>(七)利用人工智能赋能教师教学</mark>")}
+  else{f.className="frag";f.innerHTML=esc(E.text_en).replace("(7) Empower teachers' teaching with artificial intelligence","<mark>(7) Empower teachers' teaching with artificial intelligence</mark>")}
+  $("#fragMeta").textContent=lang==="zh"?`Pedazo ${E.chunk_index} del documento ${E.policy_id}. 500 caracteres en chino.`:"Traducción automática al inglés, hecha por un modelo. Solo sirve para comprobar que el idioma no cambia los resultados.";
+}
+
+function drawNums(){
+  $("#nums").innerHTML=E.embedding_first.map(n=>`<span>${n.toFixed(3)}</span>`).join("")+`<span class="more">… y ${E.embedding_dim-E.embedding_first.length} más</span>`;
+}
+
+function drawVotes(){
+  const O={western:"occidental",chinese:"china"};
+  const models=D.params.panel;
+  $("#votes").innerHTML=models.map(m=>{const v=E.votes[m.name];const ok=v.category===E.majority;
+    return `<div class="vote" title="${esc(v.rationale)}"><div class="m">${esc(m.model.split("/")[1])}</div><div class="o">empresa ${O[m.origin]}</div><div class="ok">${ok?"✓":"✗"} ${esc(v.category)}</div></div>`}).join("");
+  $("#verdict").textContent=`${E.majority_n} de 7 modelos dicen: tema ${E.majority}`;
+  $("#verdictSub").textContent="Tema 6.5 de UNESCO: planes para usar la IA en la enseñanza, el aprendizaje y el apoyo a los docentes. Tiene sentido: el pedazo habla de ayudar a los maestros a preparar clases, calificar tareas y formarse.";
+}
+
+function drawRows(){
+  const order=Object.keys(PAISES);
+  $("#rows").innerHTML=order.map(k=>{
+    const fs=D.fragments.filter(f=>f.country===k);
+    const col=f=>f.majority==="6.5"?css("--c1"):f.majority==="6.4"?css("--c2"):css("--none");
+    const sorted=[...fs].sort((a,b)=>rank(a)-rank(b));
+    return `<div class="row"><div>${PAISES[k].n}</div><div class="dots">${sorted.map(f=>`<span class="dot" style="background:${col(f)}"></span>`).join("")}</div><div class="n">${fs.length}</div></div>`;
+  }).join("");
+}
+function rank(f){return f.majority==="6.5"?0:f.majority==="6.4"?1:2}
+
+function drawFindings(){
+  const cnt=(k,c)=>D.fragments.filter(f=>f.country===k&&f.majority===c).length;
+  const tot=k=>D.fragments.filter(f=>f.country===k).length;
+  const none=k=>D.fragments.filter(f=>f.country===k&&f.majority==="none").length;
+  const R=D.results.categories;
+  const rho=(R["6.5"].spearman_original_vs_english);
+  const items=[
+    `<b>China y Colombia son los que más hablan de educación.</b> En China, ${cnt("china","6.5")+cnt("china","6.4")} de ${tot("china")} pedazos tratan de enseñanza o de ética. En Colombia, ${cnt("colombia","6.5")+cnt("colombia","6.4")} de ${tot("colombia")}.`,
+    `<b>Los planes generales de IA casi no hablan de escuelas.</b> En Estados Unidos, ${none("eeuu")} de ${tot("eeuu")} pedazos no hablan de ningún tema de UNESCO, según el panel. En Australia, ${none("australia")} de ${tot("australia")}. Es lo mismo que encontró Schiff en 2022.`,
+    `<b>El idioma no cambia mucho el resultado.</b> Si traducimos todo al inglés, los países quedan casi en el mismo orden de cercanía (coincidencia de ${rho} sobre 1 en el tema de enseñanza).`,
+    `<b>Los modelos coinciden bastante, pero no siempre.</b> En 2 de cada 3 pares de modelos eligen el mismo tema. Por eso usamos 7 y no uno solo.`,
+  ];
+  $("#findings").innerHTML=items.map(t=>`<div class="finding">${t}</div>`).join("");
+}
+</script>
+</body>
+</html>
